@@ -7,7 +7,7 @@ __version__ = '0.0.1'
 
 def accesscontrol(check_fn):
     def decorator(wrapped):
-        ACL.managed_funcs[wrapped] = None
+        ACL.managed_funcs[wrapped] = check_fn
         return wrapped
     return decorator
 

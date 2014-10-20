@@ -43,6 +43,15 @@ class TestPyac(unittest.TestCase):
         self.assertIn(WikiPage.__dict__['show'], ACL.managed_funcs)
         self.assertIn(WikiPage.__dict__['edit'], ACL.managed_funcs)
 
+    def test_pyac_registers_func_with_associated_checker(self):
+        checker = lambda user: True
+
+        @accesscontrol(checker)
+        def show():
+            print('Show wiki page')
+
+        self.assertIs(ACL.managed_funcs[show], checker)
+
 
 if __name__ == '__main__':
     unittest.main()

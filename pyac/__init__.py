@@ -31,3 +31,18 @@ class AccessDeniedError(Exception):
 class ACL(object):
     current_user = None
     managed_funcs = dict()
+
+    @classmethod
+    def for_user(cls, user):
+        return ACLContext(user)
+
+
+class ACLContext(object):
+    def __init__(self, user):
+        self.user = user
+
+    def __enter__(self):
+        ACL.current_user = self.user
+
+    def __exit__(self, exctype, excvalue, trackback):
+        ACL.current_user = None

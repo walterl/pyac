@@ -66,6 +66,10 @@ class TestPyac(unittest.TestCase):
         with self.assertRaises(AccessDeniedError):
             noone_may_call_this()
 
+    def test_acl_context_sets_current_user(self):
+        with ACL.for_user('bob'):
+            self.assertEqual(ACL.current_user, 'bob')
+
 
 if __name__ == '__main__':
     unittest.main()

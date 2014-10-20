@@ -17,6 +17,50 @@ from pyac import ACL, AccessDeniedError, accesscontrol
 
 class TestPyac(unittest.TestCase):
 
+    def test_calling_func_in_acl_context_does_not_raise_for_valid_user(self):
+        @accesscontrol(lambda user: user == 'bob')
+        def show():
+            pass
+
+        try:
+            with ACL.for_user('bob'):
+                show()
+        except AccessDeniedError as exc:
+            self.fail(exc)
+
+    def test_calling_func_in_acl_context_raises_for_invalid_user(self):
+        @accesscontrol(lambda user: user == 'alice')
+        def show():
+            pass
+
+        with ACL.for_user('bob'):
+            with self.assertRaises(AccessDeniedError):
+                show()
+
+    def test_calling_method_in_acl_context_does_not_raise_for_valid_user(self):
+        class WikiPage(object):
+            @accesscontrol(lambda user: user == 'bob')
+            def show(self):
+                pass
+
+        try:
+            wikipage = WikiPage()
+            with ACL.for_user('bob'):
+                wikipage.show()
+        except AccessDeniedError as exc:
+            self.fail(exc)
+
+    def test_calling_method_in_acl_context_raises_for_invalid_user(self):
+        class WikiPage(object):
+            @accesscontrol(lambda user: user == 'alice')
+            def show(self):
+                pass
+
+        wikipage = WikiPage()
+        with ACL.for_user('bob'):
+            with self.assertRaises(AccessDeniedError):
+                wikipage.show()
+
     def test_pyac_registers_functions(self):
         @accesscontrol(lambda user: True)
         def show():
@@ -31,7 +75,6 @@ class TestPyac(unittest.TestCase):
 
     def test_pyac_registers_methods(self):
         class WikiPage(object):
-
             @accesscontrol(lambda user: True)
             def show():
                 print('Shows the wiki page')

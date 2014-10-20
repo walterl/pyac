@@ -61,6 +61,37 @@ class TestPyac(unittest.TestCase):
             with self.assertRaises(AccessDeniedError):
                 wikipage.show()
 
+    def test_access_control_is_applied_to_different_funcs_in_one_context(self):
+        class WikiPage(object):
+            @accesscontrol(lambda user: True)
+            def show(self):
+                pass
+
+            @accesscontrol(lambda user: user == 'admin')
+            def edit(self):
+                pass
+
+        @accesscontrol(lambda user: False)
+        def show():  # Forbidden show()
+            pass
+
+        wikipage = WikiPage()
+        test_user = 'anonymous'
+        with ACL.for_user(test_user):
+            try:
+                wikipage.show()
+            except AccessDeniedError as exc:
+                self.fail(exc)
+
+            exc_regex = '^func={} user={}'.format(
+                        WikiPage.edit.im_func.__name__, test_user)
+            with self.assertRaisesRegexp(AccessDeniedError, exc_regex):
+                wikipage.edit()
+
+            exc_regex = '^func={} user={}'.format(show.__name__, test_user)
+            with self.assertRaisesRegexp(AccessDeniedError, exc_regex):
+                show()
+
     def test_pyac_registers_functions(self):
         @accesscontrol(lambda user: True)
         def show():

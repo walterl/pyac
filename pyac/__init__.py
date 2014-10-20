@@ -32,6 +32,9 @@ class ACL(object):
     current_user = None
     managed_funcs = dict()
 
+    def __init__(self):
+        raise TypeError('This class cannot be instantiated')
+
     @classmethod
     def for_user(cls, user):
         return ACLContext(user)

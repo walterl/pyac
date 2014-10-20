@@ -113,6 +113,11 @@ class TestPyac(unittest.TestCase):
         with ACL.for_user('bob'):
             self.assertEqual(ACL.current_user, 'bob')
 
+    def test_acl_cannot_be_instantiated(self):
+        exc_regex = '^This class cannot be instantiated$'
+        with self.assertRaisesRegexp(TypeError, exc_regex):
+            ACL()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -2,7 +2,7 @@
 
 __author__ = 'Walter Leibbrandt'
 __email__ = 'git wrl co za'
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 __all__ = ['accesscontrol', 'ACL', 'AccessDeniedError']
 

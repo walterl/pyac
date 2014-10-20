@@ -8,6 +8,8 @@ test_pyac
 Functional tests for pyac - Python Access Control.
 """
 
+from __future__ import print_function
+
 import unittest
 
 from pyac import ACL, accesscontrol
@@ -18,11 +20,11 @@ class TestPyac(unittest.TestCase):
     def test_pyac_registers_functions(self):
         @accesscontrol(lambda user: True)
         def show():
-            print 'Shows the wiki page'
+            print('Shows the wiki page')
 
         @accesscontrol(lambda user: user.is_admin)
         def edit():
-            print 'Edit the wiki page'
+            print('Edit the wiki page')
 
         self.assertIn(show, ACL.managed_funcs)
         self.assertIn(edit, ACL.managed_funcs)

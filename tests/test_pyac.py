@@ -52,7 +52,7 @@ class TestPyac(unittest.TestCase):
 
         self.assertIs(ACL.managed_funcs[show], checker)
 
-    def test_pyac_raises_TypeError_for_nonfunc_checker(self):
+    def test_pyac_raises_TypeError_for_noncallable_checker(self):
         with self.assertRaises(TypeError):
             @accesscontrol(None)
             def show():

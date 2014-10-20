@@ -2,51 +2,41 @@
 PyAC
 ====
 
-.. image:: https://badge.fury.io/py/pyac.png
-    :target: http://badge.fury.io/py/pyac
+Usage
+-----
 
-.. image:: https://travis-ci.org/walterl/pyac.png?branch=master
-        :target: https://travis-ci.org/walterl/pyac
-
-.. image:: https://pypip.in/d/pyac/badge.png
-        :target: https://pypi.python.org/pypi/pyac
-
-
-A simple, function level, back-end agnostic access control mechanism.
-
-* Free software: BSD license
-* Documentation: http://pyac.readthedocs.org.
-
-Features
---------
-
-* TODO
-
-Example
--------
+Add access control to functions and methods::
 
     from pyac import accesscontrol
 
     class WikiPage(object):
-
         @accesscontrol(lambda user: True)
         def show(self):
+            '''Any user may mall this method.'''
             print('Stub: show wiki page')
 
         @accesscontrol(lambda user: user.is_admin)
         def edit(self):
+            '''Only admins may call this method.'''
             print('Stub: edit wiki page')
 
-    ...
+    @accesscontrol(lambda user: user.name == 'janitor')
+    def cleanup_dead_links():
+        '''Only callable by the "janitor" user.'''
+        print('Stub: cleanup dead links in wiki')
+
+Call access controlled functions and methods::
+
+    from pyac import ACL
 
     wikipage = WikiPage()
-    with ACL(user=users.load('normaluser')):
+
+    with ACL.for_user(users.load('normaluser')):
         wikipage.show()
+        wikipage.edit()  # Raises AccessDeniedError
 
-        # Raises AccessDeniedError
+    with ACL.for_user(users.load('admin')):
         wikipage.edit()
 
-    ...
-
-    with ACL(user=users.load('admin')):
-        wikipage.edit()
+    with ACL.for_user(users.load('janitor')):
+        cleanup_dead_links()

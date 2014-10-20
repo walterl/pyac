@@ -6,6 +6,7 @@ help:
 	@echo "lint - check style with flake8"
 	@echo "test - run tests quickly with the default Python"
 	@echo "test-all - run tests on every Python version with tox"
+	@echo "nosetest - run tests with the nose"
 	@echo "coverage - check code coverage quickly with the default Python"
 	@echo "docs - generate Sphinx HTML documentation, including API docs"
 	@echo "release - package and upload a release"
@@ -33,11 +34,13 @@ test:
 test-all:
 	tox
 
+nosetest:
+	python setup.py nosetest
+
 coverage:
 	coverage run --source pyac setup.py test
 	coverage report -m
 	coverage html
-	open htmlcov/index.html
 
 docs:
 	rm -f docs/pyac.rst
@@ -45,7 +48,6 @@ docs:
 	sphinx-apidoc -o docs/ pyac
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	open docs/_build/html/index.html
 
 release: clean
 	python setup.py sdist upload

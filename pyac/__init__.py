@@ -14,8 +14,10 @@ def accesscontrol(check_fn):
     def decorator(wrapped):
         @wraps(wrapped)
         def decorated(*args, **kwargs):
+            if ACL.current_user is None:
+                raise AccessDeniedError(decorated)
             if not ACL.managed_funcs[decorated](ACL.current_user):
-                raise AccessDeniedError()
+                raise AccessDeniedError(decorated)
             return wrapped(*args, **kwargs)
 
         ACL.managed_funcs[decorated] = check_fn
@@ -25,7 +27,11 @@ def accesscontrol(check_fn):
 
 
 class AccessDeniedError(Exception):
-    pass
+    def __init__(self, func):
+        self.func = func
+        self.user = ACL.current_user
+        msg = 'func={} user={}'.format(func.__name__, self.user)
+        super(AccessDeniedError, self).__init__(msg)
 
 
 class ACL(object):

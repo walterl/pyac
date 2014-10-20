@@ -118,6 +118,27 @@ class TestPyac(unittest.TestCase):
         with self.assertRaisesRegexp(TypeError, exc_regex):
             ACL()
 
+    def test_function_call_without_acl_context_raises_AccessDeniedError(self):
+        @accesscontrol(lambda user: True)
+        def show():
+            pass
+
+        exc_regex = '^func={} user={}'.format(show.__name__, None)
+        with self.assertRaisesRegexp(AccessDeniedError, exc_regex):
+            show()
+
+    def test_AccessDeniedError_sets_fields_for_func_and_current_user(self):
+        @accesscontrol(lambda user: False)
+        def noone_may_call_this():
+            pass
+
+        try:
+            with ACL.for_user('bob'):
+                noone_may_call_this()
+        except AccessDeniedError as exc:
+            self.assertEqual(exc.user, 'bob')
+            self.assertIs(exc.func, noone_may_call_this)
+
 
 if __name__ == '__main__':
     unittest.main()

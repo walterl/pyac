@@ -12,7 +12,7 @@ from __future__ import print_function
 
 import unittest
 
-from pyac import ACL, accesscontrol
+from pyac import ACL, AccessDeniedError, accesscontrol
 
 
 class TestPyac(unittest.TestCase):
@@ -57,6 +57,14 @@ class TestPyac(unittest.TestCase):
             @accesscontrol(None)
             def show():
                 pass
+
+    def test_pyac_raises_AccessDeniedError_on_func_call_if_check_fails(self):
+        @accesscontrol(lambda user: False)
+        def noone_may_call_this():
+            pass
+
+        with self.assertRaises(AccessDeniedError):
+            noone_may_call_this()
 
 
 if __name__ == '__main__':

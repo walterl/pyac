@@ -12,7 +12,7 @@ from __future__ import print_function
 
 import unittest
 
-from pyac import ACL, AccessDeniedError, accesscontrol
+from pyac import accesscontrol, ACL, AccessDeniedError
 
 
 class TestPyac(unittest.TestCase):

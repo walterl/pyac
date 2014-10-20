@@ -6,6 +6,9 @@ __version__ = '0.0.1'
 
 
 def accesscontrol(check_fn):
+    if not callable(check_fn):
+        raise TypeError(check_fn)
+
     def decorator(wrapped):
         ACL.managed_funcs[wrapped] = check_fn
         return wrapped

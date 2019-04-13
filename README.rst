@@ -23,7 +23,9 @@ when the decorated callable is called. Decorated callables will raise
 Usage
 -----
 
-Add access control to functions and methods::
+Add access control to functions and methods:
+
+.. code-block:: python
 
     from pyac import accesscontrol
 
@@ -43,7 +45,9 @@ Add access control to functions and methods::
         '''Only callable by the "janitor" user.'''
         print('Stub: cleanup dead links in wiki')
 
-Call access controlled functions and methods::
+Call access controlled functions and methods:
+
+.. code-block:: python
 
     from pyac import ACL
 

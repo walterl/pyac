@@ -2,6 +2,24 @@
 PyAC
 ====
 
+This is very old code that I can only vaguely remember: today is
+2019-04-13, and the previous commit was on 2014-10-20. This is only
+published because it looks kinda cool. And the tests pass. :)
+
+Based on the usage example below, it's a library for adding access
+control to functions/methods. The access control is defined by arbitrary
+callables that determine access for a given user. Those callables are
+associated with the access controlled callable via the ``accesscontrol``
+decorator.
+
+In essence, it separates the access control logic from the code that is
+access controlled.
+
+The access control is then applied in the context of a specified user,
+when the decorated callable is called. Decorated callables will raise
+``AccessDeniedError`` when called without a user context.
+
+
 Usage
 -----
 
